@@ -19,9 +19,9 @@ cat << EOF > /app/gogs/docker/s6/ii/run
 
 if test -f ./setup; then
 	    source ./setup
-    fi
+fi
 
-    exec gosu root /usr/sbin/ii -i /tmp -s irc.oftc.net -n KGB-10
+exec gosu root /usr/bin/ii -i /tmp -s irc.oftc.net -n KGB-10
 EOF
 chmod +x /app/gogs/docker/s6/ii/run
 
