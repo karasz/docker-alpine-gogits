@@ -19,5 +19,7 @@ RUN /tmp/compile.sh
 
 # Configure Docker Container
 EXPOSE 22 3000
+
+ENTRYPOINT ["docker/start.sh"]
 CMD ["/usr/bin/s6-svscan", "/app/gogs/docker/s6/"]
 
