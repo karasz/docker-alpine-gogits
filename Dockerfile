@@ -16,9 +16,10 @@ ADD http://dl.suckless.org/tools/ii-1.7.tar.gz /tmp/ii-1.7.tar.gz
 WORKDIR /app/gogs/
 ADD docker/compile.sh /tmp/compile.sh
 RUN /tmp/compile.sh
-RUN mkdir -p /data/ii
-ADD docker/ii/iii.conf /data/ii/iii.conf
-ADD docker/ii/iii /data/ii/iii
+RUN mkdir -p /app/ii
+ADD docker/ii/iii.conf /app/ii/iii.conf
+ADD docker/ii/iii /app/ii/iii
+RUN chmod +x /app/ii/iii
 
 # Configure Docker Container
 EXPOSE 22 3000
