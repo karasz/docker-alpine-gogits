@@ -5,7 +5,7 @@
 rm -rf $(find /app/gogs/docker/s6/ -name 'event')
 
 # Create VOLUME subfolder
-for f in /data/gogs/data /data/gogs/conf /data/gogs/log /data/git /data/ssh; do
+for f in /data/gogs/data /data/gogs/conf /data/gogs/log /data/git /data/ssh /data/ii; do
 	if ! test -d $f; then
 		mkdir -p $f
 	fi

@@ -1,0 +1,68 @@
+#!/bin/bash
+#   _  _  _  _
+#  (_)(_)(_)(_)
+#  | || || || |
+#  | || || || |
+#  |_||_||_||_|
+#
+#    irc it, immensely improved
+#    a wrapper for ii
+#    written by thomas berryhill <tb01110100@gmail.com>
+#    under the mit license
+#    tmux removed by karasz
+
+source ./iii.conf || { echo "config file /data/ii/iii.confnot found, aborting" >&2; exit 1; }
+
+color5="$(colorconvert $ui_accent)"
+endcolor="$(colorconvert end)"
+
+case $1 in
+  help|-h|--help|"")
+    cat << EOF
+
+iii 0.1
+written by tb01110100
+
+usage: iii [command] [options]
+
+  ${color5}help${endcolor} - display this message
+
+  ${color5}start${endcolor} - start instances of ii
+
+  ${color5}stop${endcolor} - kill ii
+
+EOF
+    exit ;;
+  start)
+   for network in "${autoconnect[@]}"; do
+      "$network"
+      while true; do
+        rm "$iidir/$host/in"
+        echo "connecting to $host"
+        ii -i "$iidir" -s "$host" -p "$port" -n "$nick" -f "$fullname" &
+        iipid="$!"
+        until [[ -p "$iidir/$host/in" ]]; do sleep .1; done
+        echo "successfully connected to $host"
+        if [[ -n "$nickpass" ]]; then
+          echo "attempting to identify to ${host}'s nickserv"
+          echo "/j nickserv identify $nickpass $nick" > "$iidir/$host/in"
+          sleep 10
+        fi
+        echo "joining channels: ${autojoins[@]}"
+        for channel in "${autojoins[@]}"; do
+          echo "/j $channel" > "$iidir/$host/in"
+          sleep .5
+        done
+        unset host port autojoins nick nickpass
+        nick="$(whoami)"
+        wait "$iipid"
+        echo "connection to $host lost, attempting to reconnect"
+      done &
+    done
+    wait
+    exit ;;
+  stop)
+    killall iii ii || echo "something went wrong, feel free to troubleshoot <3" >&2
+    exit ;;
+esac
+
