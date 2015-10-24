@@ -17,3 +17,7 @@ if [ $# -gt 0 ];then
 else
 	exec /usr/bin/s6-svscan /app/gogs/docker/s6/
 fi
+
+# Launch iii
+exec /app/ii/iii start
+
